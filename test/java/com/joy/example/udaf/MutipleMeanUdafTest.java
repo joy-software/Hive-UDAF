@@ -35,11 +35,6 @@ public class MutipleMeanUdafTest {
     Object[] param3 = {8.0, 8.0, 2.1, 4.0};
     Object[] param4 = {2.0, 2.0, 3.9, 2.0};
     
-    Object[] param11 = {2, 4, 2};
-    Object[] param22 = {4, 2, 8};
-    Object[] param33 = {8, 8, 4};
-    Object[] param44 = {2, 2, 2};
-    
     Object[] error11 = {2, 2.0, 4, 2};
 
     
@@ -195,8 +190,7 @@ public class MutipleMeanUdafTest {
         evaluator.iterate(agg, param4);
         Object term = evaluator.terminate(agg);
 
-        Double[] result = {4.0, 4.0, 4.0, 4.0, 4.0};
-        assertArrayEquals(result, agg.sum);
+        Double[] result = {4.0, 4.0, 4.0, 4.0};
         
         Assert.assertTrue(term instanceof Double[]);
         assertArrayEquals((Double[])term, result);

@@ -1,24 +1,15 @@
 package com.joy.example.udaf;
 
-import java.util.ArrayList;
-
 import org.apache.hadoop.hive.ql.exec.UDFArgumentTypeException;
 import org.apache.hadoop.hive.ql.metadata.HiveException;
 import org.apache.hadoop.hive.ql.udf.generic.AbstractGenericUDAFResolver;
 import org.apache.hadoop.hive.ql.udf.generic.GenericUDAFEvaluator;
-import org.apache.hadoop.hive.ql.udf.generic.GenericUDAFEvaluator.Mode;
-import org.apache.hadoop.hive.ql.udf.generic.GenericUDFUtils;
 import org.apache.hadoop.hive.serde2.objectinspector.ListObjectInspector;
 import org.apache.hadoop.hive.serde2.objectinspector.ObjectInspector;
 import org.apache.hadoop.hive.serde2.objectinspector.ObjectInspectorFactory;
 import org.apache.hadoop.hive.serde2.objectinspector.PrimitiveObjectInspector;
-import org.apache.hadoop.hive.serde2.objectinspector.StructObjectInspector;
-import org.apache.hadoop.hive.serde2.objectinspector.primitive.JavaDoubleObjectInspector;
-import org.apache.hadoop.hive.serde2.objectinspector.primitive.PrimitiveObjectInspectorFactory;
 import org.apache.hadoop.hive.serde2.typeinfo.TypeInfo;
 import org.apache.hadoop.hive.serde2.typeinfo.TypeInfoUtils;
-
-import com.sun.jersey.server.wadl.generators.ObjectFactory;
 
 /**
  * Calculate the mean over multiple column
@@ -213,7 +204,7 @@ public class MultipleMeanUdaf extends AbstractGenericUDAFResolver {
 
 				if(object != null)
 				{
-						mAgg.sum[i] += (Double)poi.getPrimitiveJavaObject(object);
+						mAgg.sum[i] += Double.parseDouble(""+poi.getPrimitiveJavaObject(object));
 				} 
 			}
 
@@ -251,15 +242,17 @@ public class MultipleMeanUdaf extends AbstractGenericUDAFResolver {
 		@Override
 		public Object terminate(AggregationBuffer agg) throws HiveException {
 			// TODO Auto-generated method stub
-
+			Double[] result = new Double[length] ;
+			
 			MeanAgg mAgg = (MeanAgg)agg;
 
+			//Mean calculation, the result must not contain the counter as the last item
 			for(int i = 0; i < length; i++)
 			{
-				mAgg.sum[i] = mAgg.sum[i] / mAgg.sum[length];
+				result[i] = mAgg.sum[i] / mAgg.sum[length];
 			}
 
-			return mAgg.sum;
+			return result;
 		}
 
 	}
